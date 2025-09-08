@@ -1,0 +1,47 @@
+seed: 0
+data_root: data
+glob: "Train_data_list*.pt"
+field_map: {}
+tip_num: 331
+k_last_frames: 5
+
+val_ratio: 0.2
+batch_size: 8
+num_workers: 0
+
+in_dim: 3
+hidden_dim: 128
+num_layers: 4
+heads: 4
+
+# Spatial edges do not use edge features
+edge_dim_s: 0
+# Temporal edges use 1D edge feature (temporal_conf after calibration)
+edge_dim_t: 1
+
+# Time embedding for nodes (frame-index bias)
+time_emb_dim: 16
+dropout: 0.1
+readout: meanmax
+
+lr: 0.0003
+weight_decay: 0.0001
+optim: adam
+
+epochs: 200
+patience: 30
+
+label_indices: [0, 1]
+loss_weights: [1.0, 1.0]
+
+save_ckpt: true
+out_dir: ./outputs/seqgat_st_cal_t16
+
+# Temporal confidence policy
+temconfigure:
+  mode: raw     # off | raw | calibrated | binary@0.7
+  lo_q: 0.05
+  hi_q: 0.995
+  gamma: 0.6
+  floor: 0.1
+

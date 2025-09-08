@@ -1,0 +1,23 @@
+# ===== Build TEST loader with the same pipeline (mode='raw') =====
+from torch_geometric.loader import DataLoader
+import os
+
+def build_split_loader(root, cfg):
+    ds = load_dataset(
+        root,
+        glob_pattern=cfg.get('glob','*.pt'),
+        field_map=cfg.get('field_map',{}),
+        tip_num=cfg.get('tip_num'),
+        k_last_frames=cfg.get('k_last_frames'),
+    )
+    ds, _ = attach_temporal_pipeline(ds, cfg)  # 必须同一 temconfigure（raw）
+    return DataLoader(ds, batch_size=cfg.get('batch_size',8), shuffle=False, num_workers=cfg.get('num_workers',0))
+
+# 约定：如果你有独立测试路径，就在 cfg 里放 data_root_test；否则跳过
+test_root = cfg.get('data_root_test', None)
+if test_root and os.path.exists(test_root):
+    test_loader = build_split_loader(test_root, cfg)
+    mae_te = evaluate_mae(model, test_loader, device, cfg)
+    print(f"[TEST] Y={mae_te['MAE_Y']:.4f} | θ={mae_te['MAE_theta']:.4f}")
+else:
+    print("No `data_root_test` provided; skipping test (只保留 Val 结果）。")

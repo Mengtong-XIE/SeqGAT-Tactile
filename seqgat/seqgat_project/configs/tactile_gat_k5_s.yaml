@@ -1,0 +1,29 @@
+seed: 0
+data_root: data
+glob: '*.pt'
+field_map: {}
+tip_num: 331
+k_last_frames: 5
+val_ratio: 0.2
+batch_size: 8
+num_workers: 0
+in_dim: 3
+hidden_dim: 128
+num_layers: 4
+heads: 4
+edge_dim_s: 0
+time_emb_dim: 0 #32 for temporal  “仅时间编码”的 S 版本（仍无时序边）来自第几帧
+dropout: 0.1
+readout: meanmax
+lr: 0.0003
+weight_decay: 0.0001
+optim: adam
+epochs: 200
+patience: 30          # erarly stopping patience
+label_indices: [0, 1] # 如果 y 是多维，从中挑两列作为 (Y, θ)
+loss_weights:
+- 1.0
+- 1.0
+# early_stop_key: MAE_Y
+save_ckpt: true
+out_dir: ./outputs/tactile_time0
